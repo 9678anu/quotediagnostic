@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quest Diagnostics Billing Support</title>
+    <style>
+        :root {
+            --primary: #0066cc;
+            --secondary: #ff6b35;
+            --dark: #003366;
+            --light: #f0f8ff;
+            --accent: #00cc99;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        /* Gradient Background Header */
+        .gradient-header {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            padding: 2rem 0;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gradient-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            animation: pulse 15s infinite linear;
+        }
+        
+        @keyframes pulse {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+        }
+        
+        /* Glowing Logo */
+        .logo-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            height: 200px;
+            width: auto;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+        }
+        
+        /* 3D Call Button */
+        .call-btn-3d {
+            background: var(--secondary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 5px 15px rgba(255,107,53,0.4);
+            transform-style: preserve-3d;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .call-btn-3d::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--secondary), #ff8c5a);
+            z-index: -1;
+            transition: all 0.3s;
+        }
+        
+        .call-btn-3d:hover {
+            transform: translateY(-3px) rotateX(10deg);
+            box-shadow: 0 8px 25px rgba(255,107,53,0.6);
+        }
+        
+        .call-btn-3d:hover::before {
+            transform: scale(1.05);
+        }
+        
+        .call-btn-3d i {
+            font-size: 1.2rem;
+        }
+        
+        /* Hero Section with Abstract Shapes */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            position: relative;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .hero h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--secondary);
+            border-radius: 2px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: #555;
+        }
+        
+        /* Floating Abstract Shapes */
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        
+        .shape-1 {
+            top: 20%;
+            left: 10%;
+            width: 100px;
+            height: 100px;
+            background: var(--primary);
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .shape-2 {
+            top: 60%;
+            right: 15%;
+            width: 150px;
+            height: 150px;
+            background: var(--accent);
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            animation: float 10s ease-in-out infinite;
+        }
+        
+        .shape-3 {
+            bottom: 10%;
+            left: 20%;
+            width: 80px;
+            height: 80px;
+            background: var(--secondary);
+            border-radius: 50%;
+            animation: float 7s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        
+        /* Card Grid Layout */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 3rem 0;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+        
+        .feature-card:hover::before {
+            width: 100%;
+            opacity: 0.1;
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        /* Testimonial Slider */
+        .testimonial-section {
+            background: linear-gradient(135deg, var(--light), white);
+            padding: 4rem 0;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .testimonial-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="%230066cc" opacity="0.03" d="M0,0 L100,0 L100,100 Q50,80 0,100 L0,0 Z"></path></svg>');
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            z-index: 0;
+        }
+        
+        .testimonial-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .testimonial {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin: 1rem;
+            position: relative;
+        }
+        
+        .testimonial::before {
+            content: '"';
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 5rem;
+            color: var(--light);
+            font-family: Georgia, serif;
+            line-height: 1;
+            z-index: -1;
+        }
+        
+        .testimonial p {
+            font-size: 1.1rem;
+            font-style: italic;
+            color: #555;
+            margin-bottom: 1.5rem;
+        }
+        
+        .testimonial-author {
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        /* Animated CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 15%, 100% 0, 100% 100%, 0% 100%);
+            margin-top: 4rem;
+        }
+        
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="white" opacity="0.03" d="M0,0 L100,0 L0,100 L0,0 Z"></path></svg>');
+            background-size: 30% 30%;
+            animation: wave 20s linear infinite;
+        }
+        
+        @keyframes wave {
+            0% { background-position: 0 0; }
+            100% { background-position: 100% 100%; }
+        }
+        
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .cta-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .cta-content p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+        }
+        
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            color: var(--primary);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .cta-btn i {
+            font-size: 1.2rem;
+        }
+        
+        /* Floating Contact Button */
+        .floating-contact {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 100;
+        }
+        
+        .floating-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .floating-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            z-index: -1;
+            transition: all 0.3s;
+        }
+        
+        .floating-btn:hover {
+            transform: translateY(-5px) scale(1.1);
+        }
+        
+        .floating-btn:hover::before {
+            transform: rotate(180deg);
+        }
+        
+        .floating-btn i {
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .floating-btn.call {
+            background: var(--secondary);
+        }
+        
+        /* Footer with Wave */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding-top: 5rem;
+            position: relative;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path fill="white" d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25"></path><path fill="white" d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5"></path><path fill="white" d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"></path></svg>');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            transform: rotate(180deg);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 3rem 0;
+        }
+        
+        .footer-column h3 {
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--accent);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 0.8rem;
+            color: #ccc;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .cta-section {
+                clip-path: polygon(0 5%, 100% 0, 100% 100%, 0% 100%);
+                padding: 4rem 0;
+            }
+            
+            .cta-content h2 {
+                font-size: 2rem;
+            }
+            
+            .shape {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                height: 48px;
+            }
+            
+            .call-btn-3d {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Gradient Animated Header -->
+    <header class="gradient-header">
+        <div class="container">
+            <div class="logo-container">
+                <img src="https://images.seeklogo.com/logo-png/36/2/quest-diagnostics-logo-png_seeklogo-362051.png" alt="Quest Diagnostics Logo" class="logo">
+            </div>
+        </div>
+    </header>
+    
+    <!-- Hero Section with Abstract Shapes -->
+    <section class="hero">
+        <div class="container">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            
+            <h1>Billing Support Reimagined</h1>
+            <p>Experience a new way to manage your Quest Diagnostics billing with our 24/7 support team, intuitive tools, and peace-of-mind security.</p>
+        </div>
+    </section>
+    
+    <!-- Feature Card Grid -->
+    <div class="container">
+        <div class="card-grid">
+            <div class="feature-card">
+                <div class="card-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3>24/7 Support</h3>
+                <p>Round-the-clock assistance for all your billing questions and concerns from our dedicated support specialists.</p>
+                <a href="tel:+1-805-896-9616" class="call-btn-3d">
+                    <i class="fas fa-phone"></i> Call Customer Quest support
+                </a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="card-icon">
+                    <i class="fas fa-shield"></i>
+                </div>
+                <h3>Military-Grade Security</h3>
+                <p>Your data is protected with enterprise-level encryption and continuous fraud monitoring systems.</p>
+                <a href="tel:+1-805-896-9616" class="call-btn-3d">
+                    <i class="fas fa-phone"></i> Call Quest support
+                </a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="card-icon">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                </div>
+                <h3>Simplified Billing</h3>
+                <p>Clear, transparent billing statements with easy-to-understand breakdowns of all charges.</p>
+                <a href="tel:+1-805-896-9616" class="call-btn-3d">
+                    <i class="fas fa-phone"></i> Call Customer support
+                </a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="card-icon">
+                    <i class="fas fa-mobile"></i>
+                </div>
+                <h3>Mobile Management</h3>
+                <p>Access your billing information, make payments, and contact support directly from your smartphone.</p>
+                <a href="tel:+1-805-896-9616" class="call-btn-3d">
+                    <i class="fas fa-phone"></i> Call Customer Quest support
+                </a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="card-icon">
+                    <i class="fas fa-hand-holding-usd"></i>
+                </div>
+                <h3>Payment Plans</h3>
+                <p>Flexible payment options tailored to your financial situation with no hidden fees.</p>
+                <a href="tel:+1-805-896-9616" class="call-btn-3d">
+                    <i class="fas fa-phone"></i> Call Quest help support
+                </a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="card-icon">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+                <h3>Insurance Advocacy</h3>
+                <p>Our team helps navigate insurance complexities and disputes on your behalf.</p>
+                <a href="tel:+1-805-896-9616" class="call-btn-3d">
+                    <i class="fas fa-phone"></i> Call help-desk Quest support
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Testimonial Section -->
+    <section class="testimonial-section">
+        <div class="testimonial-container">
+            <div class="testimonial">
+                <p>"I was completely confused by my insurance denial, but the Quest billing specialist walked me through every step and helped resolve the issue in just one call. Amazing service!"</p>
+                <div class="testimonial-author">- Sarah J., Texas</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Disclaimer Section -->
+    <div class="container">
+        <div class="card-grid">
+            <div class="feature-card">
+                <div class="card-icon">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <h3>Disclaimer</h3>
+                <p>HealthLine Services is an independent support platform focused on assisting users with health-related billing concerns and software tools. All services and resources provided are intended to help users understand and manage their diagnostic billing more effectively.</p>
+                <p>We are not officially affiliated with Quest Diagnostics or any other medical provider or insurance company. All references to third-party services or brands are for informational purposes only.</p>
+                <p>All support tools and recommendations provided through HealthLine Services are designed in accordance with HIPAA and other applicable regulatory guidelines to protect consumer information.</p>
+                <p>For the most accurate and current billing or refund information, please refer to the official Quest Diagnostics Billing Policies available on their website.</p>
+                <a href="tel:+1-805-896-9616" class="call-btn-3d">
+                    <i class="fas fa-phone"></i> Call Customer Quest help support
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Animated CTA Section -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Ready to Resolve Your Billing Questions?</h2>
+            <p>Our friendly support team is standing by to assist you with any billing inquiries, payment arrangements, or insurance questions.</p>
+            <a href="tel:+1-805-896-9616" class="cta-btn">
+                <i class="fas fa-phone"></i> Call Customer Quest support
+            </a>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li>Billing FAQ</li>
+                        <li>Payment Options</li>
+                        <li>Insurance Help</li>
+                        <li>Dispute Resolution</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li>Privacy Policy</li>
+                        <li>Terms of Service</li>
+                        <li>HIPAA Compliance</li>
+                        <li>Security</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li>1-800-221-8437</li>
+                        <li>billing@questdiagnostics.com</li>
+                        <li>Live Chat</li>
+                        <li>Patient Portal</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>About Quest</h3>
+                    <ul>
+                        <li>Our Company</li>
+                        <li>Careers</li>
+                        <li>Locations</li>
+                        <li>Test Directory</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2025 Quest Diagnostics Incorporated. All rights reserved.</p>
+                <p>Disclaimer: This is an independent support service not affiliated with Quest Diagnostics.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Floating Contact Buttons -->
+    <div class="floating-contact">
+        <a href="tel:+1-805-896-9616" class="floating-btn call">
+            <i class="fas fa-phone"></i>
+        </a>
+    </div>
+</body>
+</html>
